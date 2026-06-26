@@ -1623,11 +1623,11 @@ table.dataTable thead th {
     background: var(--gray-50);
     color: var(--gray-700);
     font-weight: 700;
-    font-size: 0.66rem;
+    font-size: 0.62rem;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.3px;
     border-bottom: 2px solid var(--nnr-cyan-light);
-    padding: 0.65rem 0.4rem;
+    padding: 0.6rem 0.35rem;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
