@@ -455,25 +455,97 @@ class UIManager {
 
     /**
      * Update period statistics display
+     * Heatmap coloring: encodes attendance % into a colored bar at the
+     * bottom of each card. Red < 50% → yellow < 75% → cyan ≥ 75% → pink ≥ 90%.
      */
     updatePeriodStats(periodStats) {
-        if (!this.elements.periodStats) return;
+        const container = this.elements.periodStats;
+        if (!container) return;
 
-        let html = '';
+        // Limpa conteúdo anterior com segurança
+        while (container.firstChild) container.removeChild(container.firstChild);
+
+        const frag = document.createDocumentFragment();
+
         periodStats.forEach(stat => {
-            html += `
-                <div class="period-stat-item">
-                    <div class="period-label">${stat.label}</div>
-                    <div class="period-value">${stat.taxa}%</div>
-                    <div class="period-detail">
-                        <span class="text-success">${stat.presencas}P</span> / 
-                        <span class="text-danger">${stat.faltas}F</span>
-                    </div>
-                </div>
-            `;
+            const taxa = parseFloat(stat.taxa) || 0;
+            const { color, textColor, soft } = this._periodHeatmap(taxa);
+
+            const card = document.createElement('div');
+            card.className = 'period-stat-item';
+            card.style.setProperty('--heatmap-color', color);
+            card.style.setProperty('--heatmap-text', textColor);
+            card.style.background = soft;
+
+            const label = document.createElement('div');
+            label.className = 'period-label';
+            label.textContent = stat.label;
+
+            const value = document.createElement('div');
+            value.className = 'period-value';
+            value.textContent = `${stat.taxa}%`;
+
+            const detail = document.createElement('div');
+            detail.className = 'period-detail';
+
+            const presSpan = document.createElement('span');
+            presSpan.style.color = '#006B43';
+            presSpan.textContent = `${stat.presencas}P`;
+
+            const sep = document.createTextNode(' / ');
+
+            const faltSpan = document.createElement('span');
+            faltSpan.style.color = '#B80000';
+            faltSpan.textContent = `${stat.faltas}F`;
+
+            detail.appendChild(presSpan);
+            detail.appendChild(sep);
+            detail.appendChild(faltSpan);
+
+            card.appendChild(label);
+            card.appendChild(value);
+            card.appendChild(detail);
+            frag.appendChild(card);
         });
 
-        this.elements.periodStats.innerHTML = html;
+        container.appendChild(frag);
+    }
+
+    /**
+     * Mapeia taxa de presença em cores do heatmap.
+     * @returns {{color: string, textColor: string, soft: string}}
+     */
+    _periodHeatmap(taxa) {
+        if (taxa >= 90) {
+            // Excelente — verde/cyan escuro
+            return {
+                color: '#00BAD6',
+                textColor: '#006B8E',
+                soft: 'linear-gradient(135deg, rgba(0, 186, 214, 0.10) 0%, rgba(74, 234, 220, 0.06) 100%)'
+            };
+        }
+        if (taxa >= 75) {
+            // Bom — cyan claro (acima do mínimo de certificação)
+            return {
+                color: '#4AEADC',
+                textColor: '#008999',
+                soft: 'linear-gradient(135deg, rgba(74, 234, 220, 0.10) 0%, rgba(0, 186, 214, 0.04) 100%)'
+            };
+        }
+        if (taxa >= 50) {
+            // Atenção — amarelo
+            return {
+                color: '#FFB800',
+                textColor: '#8B6300',
+                soft: 'linear-gradient(135deg, rgba(255, 184, 0, 0.10) 0%, rgba(255, 184, 0, 0.04) 100%)'
+            };
+        }
+        // Crítico — vermelho/laranja
+        return {
+            color: '#FE2D2D',
+            textColor: '#B80000',
+            soft: 'linear-gradient(135deg, rgba(254, 45, 45, 0.10) 0%, rgba(254, 45, 45, 0.04) 100%)'
+        };
     }
 
     /**

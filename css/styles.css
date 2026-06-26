@@ -194,11 +194,16 @@ h1, h2, h3, h4, h5, h6,
 .header-title {
     color: var(--gray-900);
     font-family: var(--font-family-heading);
-    font-weight: 900;
-    font-size: 3rem;
-    line-height: 1.05;
+    font-weight: 800;
+    font-size: 2.5rem;
+    line-height: 1.08;
     margin: 0 0 0.85rem 0;
-    letter-spacing: -1px;
+    letter-spacing: -0.75px;
+    white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+    .header-title { white-space: normal; font-size: 2.25rem; }
 }
 
 .header-subtitle {
@@ -484,14 +489,16 @@ h1, h2, h3, h4, h5, h6,
     background: white;
     border: 2px solid var(--nnr-pink);
     border-radius: 10px;
-    padding: 0.625rem 1rem;
+    padding: 0.625rem 0.95rem;
     font-weight: 700;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     letter-spacing: 0.3px;
     color: var(--nnr-pink-dark);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 .btn-clear-filters::before {
@@ -530,13 +537,13 @@ h1, h2, h3, h4, h5, h6,
    Stats Cards
    ============================================= */
 .stats-section {
-    margin-top: 2rem;
+    margin-top: 2.25rem;
 }
 
 .stat-card {
     background: white;
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 1.35rem 1.5rem 1.5rem 1.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
@@ -880,7 +887,7 @@ h1, h2, h3, h4, h5, h6,
    Charts Section
    ============================================= */
 .chart-section {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
 }
 
 .chart-card {
@@ -1117,52 +1124,102 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* =============================================
-   Period Stats Grid
+   Period Stats Grid — heatmap by attendance %
    ============================================= */
 .period-stats-grid {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    gap: 0.5rem;
+    gap: 0.6rem;
 }
 
 .period-stat-item {
-    background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
-    border: 1px solid var(--gray-200);
-    border-radius: 10px;
-    padding: 0.75rem;
+    position: relative;
+    background: white;
+    border: 1.5px solid var(--gray-100);
+    border-radius: 12px;
+    padding: 0.75rem 0.5rem 0.85rem 0.5rem;
     text-align: center;
     transition: all 0.3s ease;
+    overflow: hidden;
+    cursor: default;
+}
+
+/* Heatmap bar — gradient fill at bottom encoding attendance % */
+.period-stat-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--heatmap-color, var(--gray-200));
+    transition: height 0.3s ease, background 0.3s ease;
 }
 
 .period-stat-item:hover {
-    transform: translateY(-3px);
-    border-color: var(--nnr-cyan-light);
-    box-shadow: 0 6px 20px rgba(0, 186, 214, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border-color: var(--heatmap-color, var(--gray-200));
+}
+
+.period-stat-item:hover::after {
+    height: 6px;
 }
 
 .period-stat-item .period-label {
     font-weight: 700;
-    color: var(--nnr-cyan-dark);
-    font-size: 0.85rem;
+    color: var(--gray-700);
+    font-size: 0.78rem;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.35rem;
 }
 
 .period-stat-item .period-value {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 800;
-    color: var(--nnr-pink-dark);
+    color: var(--heatmap-text, var(--nnr-pink-dark));
+    line-height: 1;
+    letter-spacing: -0.4px;
 }
 
 .period-stat-item .period-detail {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--gray-500);
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+/* Heatmap legend — small color swatches with thresholds */
+.period-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.period-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    font-weight: 600;
+    font-family: var(--font-family-heading);
+}
+
+.period-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
 }
 
 /* =============================================
    Table Section
    ============================================= */
 .table-section {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .table-card {
