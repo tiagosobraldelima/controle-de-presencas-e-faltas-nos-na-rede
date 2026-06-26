@@ -871,19 +871,20 @@ class UIManager {
     getTableColumns() {
         // Larguras em 'px' fixas — DataTables respeita-as e o cabeçalho
         // alinha com as células, eliminando o scroll horizontal.
-        // Soma alvo: ~1170px para caber no container padrão (≤1294px wrapper).
+        // Soma alvo: ~975px para caber em telas de 1200px+ (Bootstrap container).
+        // Distribuição focada em caber em laptops de 1366-1440px SEM scroll.
         return [
-            { data: 'nome',           width: '135px', render: (d) => this.renderTruncated(d) },
-            { data: 'cpf',            width: '70px',  render: (d) => this.renderTruncated(d) },
-            { data: 'municipio',      width: '95px',  render: (d) => this.renderTruncated(d) },
-            { data: 'turma',          width: '140px', render: (d) => this.renderTruncated(d) },
-            { data: 'educador',       width: '120px', render: (d) => this.renderTruncated(d) },
-            { data: 'status',         width: '82px',  render: (d) => this.renderStatusBadge(d) },
-            { data: 'certificacao',   width: '120px', render: (d) => this.renderCertificacaoBadge(d) },
-            { data: 'presencas',      width: '85px' },
-            { data: 'faltas',         width: '65px' },
-            { data: 'justificados',   width: '102px' },
-            { data: 'taxaPresenca',   width: '98px',  render: (d) => this.renderPercentage(d) }
+            { data: 'nome',           width: '118px', render: (d) => this.renderTruncated(d) },
+            { data: 'cpf',            width: '64px',  render: (d) => this.renderTruncated(d) },
+            { data: 'municipio',      width: '82px',  render: (d) => this.renderTruncated(d) },
+            { data: 'turma',          width: '122px', render: (d) => this.renderTruncated(d) },
+            { data: 'educador',       width: '100px', render: (d) => this.renderTruncated(d) },
+            { data: 'status',         width: '72px',  render: (d) => this.renderStatusBadge(d) },
+            { data: 'certificacao',   width: '108px', render: (d) => this.renderCertificacaoBadge(d) },
+            { data: 'presencas',      width: '72px' },
+            { data: 'faltas',         width: '58px' },
+            { data: 'justificados',   width: '88px' },
+            { data: 'taxaPresenca',   width: '88px',  render: (d) => this.renderPercentage(d) }
         ];
     }
 

@@ -1549,10 +1549,10 @@ h1, h2, h3, h4, h5, h6,
 
 .column-filter {
     width: 100%;
-    padding: 0.35rem 0.6rem;
+    padding: 0.25rem 0.45rem;
     border: 1px solid var(--gray-200);
     border-radius: 6px;
-    font-size: 0.78rem;
+    font-size: 0.68rem;
     font-family: var(--font-family);
     color: var(--gray-900);
     background: white;
@@ -1562,9 +1562,9 @@ h1, h2, h3, h4, h5, h6,
     -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23666' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 0.45rem center;
-    background-size: 8px 8px;
-    padding-right: 1.4rem;
+    background-position: right 0.4rem center;
+    background-size: 7px 7px;
+    padding-right: 1.15rem;
 }
 
 .column-filter[type="text"],
@@ -1592,20 +1592,20 @@ table.dataTable thead .filter-row th {
 
 /* DataTables */
 .dataTables_wrapper {
-    padding: 1.25rem;
+    padding: 1rem;
 }
 
 .dataTables_filter {
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.75rem;
 }
 
 .dataTables_filter input {
     border-radius: 10px;
     border: 2px solid var(--gray-200);
-    padding: 0.55rem 0.85rem;
-    min-width: 240px;
+    padding: 0.45rem 0.75rem;
+    min-width: 200px;
     transition: all 0.3s ease;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .dataTables_filter input:focus {
@@ -1616,18 +1616,29 @@ table.dataTable thead .filter-row th {
 .dataTables_length select {
     border-radius: 10px;
     border: 2px solid var(--gray-200);
-    padding: 0.5rem 2rem 0.5rem 1rem;
+    padding: 0.4rem 1.75rem 0.4rem 0.85rem;
+    font-size: 0.8rem;
+}
+
+/* Torna os dropdowns de filtro de coluna também compactos */
+table.dataTable thead .column-filter,
+table.dataTable thead select,
+table.dataTable thead input {
+    max-width: 100%;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.4rem;
+    box-sizing: border-box;
 }
 
 table.dataTable thead th {
     background: var(--gray-50);
     color: var(--gray-700);
     font-weight: 700;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     text-transform: uppercase;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.15px;
     border-bottom: 2px solid var(--nnr-cyan-light);
-    padding: 0.55rem 0.3rem;
+    padding: 0.5rem 0.25rem;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -1635,9 +1646,9 @@ table.dataTable thead th {
 }
 
 table.dataTable tbody td {
-    padding: 0.6rem 0.45rem;
+    padding: 0.45rem 0.3rem;
     vertical-align: middle;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     text-align: center;
     border-bottom: 1px solid var(--gray-100);
     /* Truncamento por célula — cada coluna tem largura fixa via DataTables */
@@ -1697,10 +1708,12 @@ table.dataTable tbody td {
 
 /* Status Badges */
 .badge-status {
-    padding: 0.35rem 0.7rem;
+    padding: 0.25rem 0.55rem;
     border-radius: 20px;
     font-weight: 600;
-    font-size: 0.72rem;
+    font-size: 0.66rem;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .badge-presente {
@@ -1747,16 +1760,19 @@ table.dataTable tbody td {
    The label is part of the cell content so DataTables can search it. */
 .cert-badge {
     display: inline-block;
-    padding: 0.32rem 0.75rem;
+    padding: 0.22rem 0.6rem;
     border-radius: 14px;
-    font-size: 0.74rem;
+    font-size: 0.66rem;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.1px;
     white-space: nowrap;
     line-height: 1.2;
     text-align: center;
     border: 1.5px solid transparent;
     transition: transform 0.15s ease;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .cert-badge:hover {
