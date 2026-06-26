@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Dashboard de monitoramento de presenças e certificação - Projeto Nós na Rede, Fiocruz Brasília">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta name="theme-color" content="#FF6B9B">
     <title>Dashboard - Projeto Nós na Rede | Monitoramento de Presenças</title>
 
     <!-- Bootstrap 5 CSS -->
@@ -29,6 +27,25 @@
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
+    </div>
+
+    <!-- Visible Error Banner (shown only on data load failure) -->
+    <div class="error-banner" id="errorBanner" hidden role="alert">
+        <div class="container">
+            <div class="error-banner-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="error-banner-text">
+                    <strong id="errorBannerTitle">Não foi possível carregar os dados</strong>
+                    <span id="errorBannerDetail"></span>
+                </div>
+                <button class="error-banner-action" id="errorBannerRetry">
+                    <i class="fas fa-sync-alt"></i> Tentar novamente
+                </button>
+                <button class="error-banner-dismiss" id="errorBannerDismiss" aria-label="Fechar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Header -->

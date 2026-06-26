@@ -1721,6 +1721,94 @@ table.dataTable tbody tr:hover {
 }
 
 /* =============================================
+   Error Banner (visible feedback for load failures)
+   ============================================= */
+.error-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #FFF4F4 0%, #FFE8EC 100%);
+    border-bottom: 2px solid var(--danger);
+    color: #8B0000;
+    padding: 14px 0;
+    z-index: 10000;
+    box-shadow: 0 4px 18px rgba(254, 45, 45, 0.18);
+    animation: errorBannerSlide 0.4s ease-out;
+}
+
+@keyframes errorBannerSlide {
+    from { transform: translateY(-100%); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+.error-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.error-banner > .container > .error-banner-content > i.fas.fa-exclamation-triangle {
+    font-size: 22px;
+    color: var(--danger);
+    flex-shrink: 0;
+}
+
+.error-banner-text {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.error-banner-text strong {
+    color: #8B0000;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.error-banner-text span {
+    color: #5C1010;
+    font-size: 12.5px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.error-banner-action,
+.error-banner-dismiss {
+    border: none;
+    background: var(--danger);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s ease;
+}
+
+.error-banner-action:hover,
+.error-banner-dismiss:hover {
+    background: #C92020;
+}
+
+.error-banner-dismiss {
+    background: transparent;
+    color: var(--danger);
+    padding: 8px 10px;
+}
+
+.error-banner-dismiss:hover {
+    background: rgba(254, 45, 45, 0.1);
+    color: var(--danger);
+}
+
+/* =============================================
    Loading Animation
    ============================================= */
 .loading-overlay {

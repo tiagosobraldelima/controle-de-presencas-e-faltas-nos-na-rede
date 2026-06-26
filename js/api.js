@@ -236,12 +236,23 @@ class APIClient {
 
     /**
      * Tenta fetch direto do Google Sheets
+     * Safari bloqueia cookies de terceiros durante o redirect 307 → tentamos
+     * com `credentials: 'omit'` para evitar que a política ITP quebre o fluxo.
      */
     async _fetchDirect(url) {
         const response = await this.fetchWithRetry(url, {
-            headers: { 'Accept': 'text/csv,*/*' }
+            headers: { 'Accept': 'text/csv,*/*' },
+            credentials: 'omit',
+            cache: 'no-store'
         });
         const text = await response.text();
+        // Validação: precisa começar com header CSV (não pode ser HTML de erro)
+        if (text && /^<\s*(!doctype|html|head|body)/i.test(text.trim())) {
+            throw new Error('Resposta HTML recebida (proxy CORS pode estar bloqueado)');
+        }
+        if (text && !/[,;\t]/.test(text.substring(0, 500))) {
+            throw new Error('Resposta não parece ser CSV');
+        }
         return text;
     }
 
@@ -284,12 +295,14 @@ class APIClient {
             const url = Config.API.CSV_URL;
             let csvText = null;
             let strategy = 'unknown';
+            const errors = [];
 
             // 1) Tenta direto (Google Sheets libera CORS: *)
             try {
                 csvText = await this._fetchDirect(url);
                 strategy = 'direct';
             } catch (directErr) {
+                errors.push(`direct: ${directErr.message}`);
                 this._log('warn', `Fetch direto falhou (${directErr.message}), tentando proxies públicos...`);
             }
 
@@ -299,7 +312,8 @@ class APIClient {
                     csvText = await this._fetchViaPublicProxy(url);
                     strategy = 'public-proxy';
                 } catch (proxyErr) {
-                    throw new Error(`Fetch direto e proxies falharam: ${proxyErr.message}`);
+                    errors.push(`proxy: ${proxyErr.message}`);
+                    throw new Error(`Fetch direto e proxies falharam. Detalhes: ${errors.join(' | ')}`);
                 }
             }
 

@@ -136,6 +136,14 @@ class DashboardApp {
         document.getElementById('btnCopy')?.addEventListener('click', () => {
             this.copyToClipboard();
         });
+
+        // Error banner buttons
+        document.getElementById('errorBannerRetry')?.addEventListener('click', () => {
+            this.refresh();
+        });
+        document.getElementById('errorBannerDismiss')?.addEventListener('click', () => {
+            this.hideErrorBanner();
+        });
     }
 
     /**
@@ -144,10 +152,12 @@ class DashboardApp {
     async loadData() {
         uiManager.showLoading();
         const isStatic = apiClient.isStatic();
+        const browserInfo = this._detectBrowser();
         uiManager.setDataSourceStatus(
             'loading',
             isStatic ? 'Carregando dados públicos...' : 'Conectando...'
         );
+        this.hideErrorBanner();
 
         try {
             // Fetch raw data from server
@@ -168,15 +178,87 @@ class DashboardApp {
             uiManager.updateLastUpdate();
 
             console.log(Config.LOG.PREFIX, `Loaded ${rawData.length} raw records, ${dataProcessor.processedData.length} students`);
+            console.log(Config.LOG.PREFIX, `Browser: ${browserInfo.name} ${browserInfo.version}, Mode: ${apiClient.getMode()}`);
 
         } catch (error) {
             console.error(Config.LOG.PREFIX, 'Failed to load data:', error);
             uiManager.setDataSourceStatus('error', 'Erro ao carregar');
-            // Em modo estático, não há servidor para iniciar — mostra mensagem genérica
+
+            // Diagnóstico detalhado para ajudar o usuário
+            const diagnostic = this._buildDiagnostic(error, browserInfo, isStatic);
+            this.showErrorBanner(diagnostic.title, diagnostic.detail);
             uiManager.showServerInstructions(!isStatic);
         } finally {
             uiManager.hideLoading();
         }
+    }
+
+    /**
+     * Detecta nome + versão do navegador (informativo)
+     */
+    _detectBrowser() {
+        const ua = navigator.userAgent;
+        if (/Safari\//.test(ua) && !/Chrome\//.test(ua) && !/Chromium\//.test(ua)) {
+            const m = ua.match(/Version\/(\d+)\.?(\d+)?\s+(Safari|Mobile\/\w+)/);
+            return { name: 'Safari', version: m ? `${m[1]}.${m[2] || 0}` : 'desconhecida' };
+        }
+        if (/Chrome\//.test(ua) && !/Edg\//.test(ua)) {
+            const m = ua.match(/Chrome\/(\d+)/);
+            return { name: 'Chrome', version: m ? m[1] : 'desconhecida' };
+        }
+        if (/Edg\//.test(ua)) {
+            const m = ua.match(/Edg\/(\d+)/);
+            return { name: 'Edge', version: m ? m[1] : 'desconhecida' };
+        }
+        if (/Firefox\//.test(ua)) {
+            const m = ua.match(/Firefox\/(\d+)/);
+            return { name: 'Firefox', version: m ? m[1] : 'desconhecida' };
+        }
+        return { name: 'Desconhecido', version: '?' };
+    }
+
+    /**
+     * Constrói diagnóstico legível para o usuário
+     */
+    _buildDiagnostic(error, browser, isStatic) {
+        const errMsg = (error && error.message) || String(error);
+        const errName = (error && error.name) || 'Error';
+
+        let detail = '';
+        if (/AbortError|timeout/i.test(errMsg)) {
+            detail = 'A requisição excedeu o tempo limite. Verifique sua conexão e tente novamente.';
+        } else if (/Failed to fetch|NetworkError|Load failed/i.test(errMsg)) {
+            detail = isStatic
+                ? 'Não foi possível acessar o Google Sheets. Possíveis causas: bloqueador de conteúdo (extensão do Safari), cookies de terceiros bloqueados em "Prevenir rastreamento entre sites", ou firewall corporativo. Tente desabilitar extensões ou usar outro navegador.'
+                : 'Falha de rede ao contatar o servidor local. Verifique se o `python3 server.py` está rodando.';
+        } else if (/CORS|Access-Control-Allow/i.test(errMsg)) {
+            detail = 'Bloqueio de CORS detectado. Safari pode estar bloqueando cookies de terceiros durante o redirecionamento do Google Sheets. Tente desmarcar "Prevenir rastreamento entre sites" em Safari → Configurações → Privacidade.';
+        } else {
+            detail = `${errName}: ${errMsg}. Navegador: ${browser.name} ${browser.version}.`;
+        }
+
+        return {
+            title: 'Não foi possível carregar os dados do Google Sheets',
+            detail
+        };
+    }
+
+    /**
+     * Mostra banner de erro visível
+     */
+    showErrorBanner(title, detail) {
+        const banner = document.getElementById('errorBanner');
+        const titleEl = document.getElementById('errorBannerTitle');
+        const detailEl = document.getElementById('errorBannerDetail');
+        if (!banner || !titleEl || !detailEl) return;
+        titleEl.textContent = title;
+        detailEl.textContent = detail;
+        banner.hidden = false;
+    }
+
+    hideErrorBanner() {
+        const banner = document.getElementById('errorBanner');
+        if (banner) banner.hidden = true;
     }
 
     /**
