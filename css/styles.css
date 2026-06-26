@@ -1632,21 +1632,70 @@ table.dataTable thead th {
 }
 
 table.dataTable tbody td {
-    padding: 0.75rem 0.5rem;
+    padding: 0.75rem 0.6rem;
     vertical-align: middle;
     font-size: 0.85rem;
     text-align: center;
     border-bottom: 1px solid var(--gray-100);
+    /* Mantém cada célula em uma linha com ellipsis se overflow */
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Span que efetivamente trunca — recebe o tooltip no title */
+.cell-truncated {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: help;
+}
+
+/* Em mobile (≤768px) permite quebra de linha para melhor leitura */
+@media (max-width: 768px) {
+    .cell-truncated {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
 }
 
 table.dataTable tbody td:first-child {
     text-align: left;
     font-weight: 500;
     color: var(--gray-900);
+    max-width: 260px;
+}
+
+/* Colunas com texto mais curto (numéricas e badges) não devem truncar */
+table.dataTable tbody td:nth-child(n+5):nth-child(-n+10) {
+    max-width: 140px;
 }
 
 table.dataTable tbody tr:hover {
     background: linear-gradient(90deg, rgba(255, 107, 155, 0.04) 0%, rgba(0, 186, 214, 0.04) 100%);
+}
+
+/* Wrapper da tabela — permite scroll horizontal se necessário sem cortar o cabeçalho */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 0 0 12px 12px;
+}
+
+table.dataTable {
+    width: 100% !important;
+    table-layout: auto;
+}
+
+/* Cabeçalhos também com ellipsis para garantir leitura completa */
+table.dataTable thead th {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Status Badges */

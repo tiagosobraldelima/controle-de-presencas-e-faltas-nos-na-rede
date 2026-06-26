@@ -869,11 +869,26 @@ class UIManager {
      */
     getTableColumns() {
         return [
-            { data: 'nome' },
-            { data: 'cpf' },
-            { data: 'municipio' },
-            { data: 'turma' },
-            { data: 'educador' },
+            {
+                data: 'nome',
+                render: (d) => this.renderTruncated(d)
+            },
+            {
+                data: 'cpf',
+                render: (d) => this.renderTruncated(d)
+            },
+            {
+                data: 'municipio',
+                render: (d) => this.renderTruncated(d)
+            },
+            {
+                data: 'turma',
+                render: (d) => this.renderTruncated(d)
+            },
+            {
+                data: 'educador',
+                render: (d) => this.renderTruncated(d)
+            },
             {
                 data: 'status',
                 render: (d) => this.renderStatusBadge(d)
@@ -890,6 +905,25 @@ class UIManager {
                 render: (d) => this.renderPercentage(d)
             }
         ];
+    }
+
+    /**
+     * Renderiza célula de texto com truncamento visual + tooltip.
+     * Garante que o texto caiba em uma linha com ellipsis (...) quando
+     * exceder o max-width da coluna, e mostra o valor completo no hover.
+     */
+    renderTruncated(value) {
+        if (value === null || value === undefined) return '';
+        const text = String(value);
+        // XSS prevention: usa textContent via DOM API. Como estamos em template
+        // string para DataTables, escapamos manualmente caracteres perigosos.
+        const escaped = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        return `<span class="cell-truncated" title="${escaped}">${escaped}</span>`;
     }
 
     /**
