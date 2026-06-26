@@ -1592,19 +1592,20 @@ table.dataTable thead .filter-row th {
 
 /* DataTables */
 .dataTables_wrapper {
-    padding: 1.5rem;
+    padding: 1.25rem;
 }
 
 .dataTables_filter {
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
 }
 
 .dataTables_filter input {
     border-radius: 10px;
     border: 2px solid var(--gray-200);
-    padding: 0.625rem 1rem;
-    min-width: 300px;
+    padding: 0.55rem 0.85rem;
+    min-width: 240px;
     transition: all 0.3s ease;
+    font-size: 0.85rem;
 }
 
 .dataTables_filter input:focus {
@@ -1622,23 +1623,24 @@ table.dataTable thead th {
     background: var(--gray-50);
     color: var(--gray-700);
     font-weight: 700;
-    font-size: 0.7rem;
+    font-size: 0.66rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
     border-bottom: 2px solid var(--nnr-cyan-light);
-    padding: 0.75rem 0.5rem;
+    padding: 0.65rem 0.4rem;
     text-align: center;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 table.dataTable tbody td {
-    padding: 0.75rem 0.6rem;
+    padding: 0.6rem 0.45rem;
     vertical-align: middle;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-align: center;
     border-bottom: 1px solid var(--gray-100);
-    /* Mantém cada célula em uma linha com ellipsis se overflow */
-    max-width: 240px;
+    /* Truncamento por célula — cada coluna tem largura fixa via DataTables */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1668,34 +1670,29 @@ table.dataTable tbody td:first-child {
     text-align: left;
     font-weight: 500;
     color: var(--gray-900);
-    max-width: 260px;
-}
-
-/* Colunas com texto mais curto (numéricas e badges) não devem truncar */
-table.dataTable tbody td:nth-child(n+5):nth-child(-n+10) {
-    max-width: 140px;
 }
 
 table.dataTable tbody tr:hover {
     background: linear-gradient(90deg, rgba(255, 107, 155, 0.04) 0%, rgba(0, 186, 214, 0.04) 100%);
 }
 
-/* Wrapper da tabela — permite scroll horizontal se necessário sem cortar o cabeçalho */
+/* Wrapper da tabela — sem scroll horizontal, tudo cabe no container */
 .table-responsive {
-    overflow-x: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     border-radius: 0 0 12px 12px;
 }
 
 table.dataTable {
     width: 100% !important;
-    table-layout: auto;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
-/* Cabeçalhos também com ellipsis para garantir leitura completa */
-table.dataTable thead th {
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* Garante que o thead acompanhe larguras fixas (sticky header opcional) */
+table.dataTable thead th,
+table.dataTable tbody td {
+    box-sizing: border-box;
 }
 
 /* Status Badges */
