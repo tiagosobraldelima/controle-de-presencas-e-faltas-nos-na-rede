@@ -115,20 +115,38 @@ nos-na-rede-dashboard/
 
 ---
 
-## 🛠️ Instalação e Uso
+## 🌐 Acesso Web (Deploy)
+
+O dashboard detecta automaticamente o ambiente e se adapta:
+
+| Ambiente | Modo | Funcionamento |
+|---|---|---|
+| `localhost` / `127.0.0.1` | `proxy` | Usa `server.py` (CORS proxy local) |
+| GitHub Pages, Netlify, Vercel, etc. | `static` | Fetch direto do Google Sheets (CORS liberado) |
+| `file://` | `static` | Fetch direto + fallback para proxies CORS públicos |
+
+### 🌐 Demo online (GitHub Pages)
+
+**URL:** https://tiagosobraldelima.github.io/controle-de-presencas-e-faltas-nos-na-rede/
+
+Não requer servidor — os dados são carregados diretamente do Google Sheets público. Funciona em qualquer dispositivo com navegador moderno.
+
+---
+
+## 🛠️ Instalação Local
 
 ### Pré-requisitos
-- Python 3.7+ (apenas para o servidor proxy)
+- Python 3.7+ (apenas para o servidor proxy local)
 - Navegador moderno (Chrome, Firefox, Safari, Edge)
 - Acesso à planilha Google Sheets pública do projeto
 
 ### 1. Clone o repositório
 ```bash
-git clone https://github.com/SEU_USUARIO/nos-na-rede-dashboard.git
-cd nos-na-rede-dashboard
+git clone https://github.com/tiagosobraldelima/controle-de-presencas-e-faltas-nos-na-rede.git
+cd controle-de-presencas-e-faltas-nos-na-rede
 ```
 
-### 2. Inicie o servidor Python
+### 2. Inicie o servidor Python (opcional)
 ```bash
 python3 server.py
 ```
@@ -140,7 +158,7 @@ O servidor tentará as portas 8000, 8001, 8080 e 8888 automaticamente.
 http://localhost:8000
 ```
 
-> **Nota:** O servidor é necessário apenas para contornar as restrições de CORS do navegador ao buscar dados do Google Sheets. Sem ele, o dashboard mostrará as instruções de inicialização.
+> **Dica:** Se você só quer visualizar os dados, abra `index.html` diretamente no navegador ou hospede o repositório em qualquer serviço de static hosting (GitHub Pages, Netlify, Vercel, Cloudflare Pages). O modo `static` cuida do resto.
 
 ---
 
@@ -204,6 +222,42 @@ O dashboard segue rigorosamente a identidade visual da página oficial do Projet
 3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
 4. Push para a branch (`git push origin feature/MinhaFeature`)
 5. Abra um Pull Request
+
+---
+
+## 🚀 Deploy em Produção
+
+### GitHub Pages (recomendado — grátis, rápido)
+
+1. Faça push do código para um repositório GitHub
+2. Vá em **Settings → Pages**
+3. Em **Source**, selecione o branch `main` e pasta `/ (root)`
+4. Aguarde ~1 minuto para o build
+5. Acesse: `https://SEU_USUARIO.github.io/NOME_DO_REPO/`
+
+A detecção de hosting estático é automática. Não requer configuração adicional.
+
+### Via CLI
+```bash
+gh api -X POST "/repos/SEU_USUARIO/NOME_DO_REPO/pages" \
+    -f "source[branch]=main" -f "source[path]=/"
+```
+
+### Netlify / Vercel / Cloudflare Pages
+Basta importar o repositório — o dashboard detecta automaticamente que está em hosting estático.
+
+### Customização para outros dados
+
+Edite `js/config.js` para apontar para sua própria planilha Google Sheets:
+
+```javascript
+API: {
+    MODE: 'auto',  // 'auto' | 'static' | 'proxy'
+    CSV_URL: 'https://docs.google.com/spreadsheets/d/SEU_DOC_ID/pub?gid=0&single=true&output=csv',
+}
+```
+
+A planilha precisa estar **publicada na web** (Arquivo → Compartilhar → Publicar na web → CSV).
 
 ---
 

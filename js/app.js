@@ -143,7 +143,11 @@ class DashboardApp {
      */
     async loadData() {
         uiManager.showLoading();
-        uiManager.setDataSourceStatus('loading', 'Conectando...');
+        const isStatic = apiClient.isStatic();
+        uiManager.setDataSourceStatus(
+            'loading',
+            isStatic ? 'Carregando dados públicos...' : 'Conectando...'
+        );
 
         try {
             // Fetch raw data from server
@@ -156,7 +160,10 @@ class DashboardApp {
             uiManager.populateFilters(dataProcessor.getFilterOptions());
 
             // Update UI
-            uiManager.setDataSourceStatus('connected', 'Dados Carregados');
+            uiManager.setDataSourceStatus(
+                'connected',
+                isStatic ? `Dados públicos · ${apiClient.getMode()}` : 'Dados Carregados'
+            );
             uiManager.showServerInstructions(false);
             uiManager.updateLastUpdate();
 
@@ -164,8 +171,9 @@ class DashboardApp {
 
         } catch (error) {
             console.error(Config.LOG.PREFIX, 'Failed to load data:', error);
-            uiManager.setDataSourceStatus('error', 'Erro de conexão');
-            uiManager.showServerInstructions(true);
+            uiManager.setDataSourceStatus('error', 'Erro ao carregar');
+            // Em modo estático, não há servidor para iniciar — mostra mensagem genérica
+            uiManager.showServerInstructions(!isStatic);
         } finally {
             uiManager.hideLoading();
         }

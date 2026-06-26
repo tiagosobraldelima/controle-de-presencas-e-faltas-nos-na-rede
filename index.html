@@ -74,8 +74,8 @@
 
     <!-- Main Content -->
     <main class="container">
-        <!-- Server Instructions -->
-        <div class="server-instructions" id="serverInstructions">
+        <!-- Server Instructions (shown only when needed — proxy mode fails) -->
+        <div class="server-instructions" id="serverInstructions" hidden>
             <h5><i class="fas fa-server me-2"></i>Instruções para Iniciar o Servidor</h5>
             <p>Para que o dashboard funcione corretamente, você precisa iniciar o servidor local. Execute os comandos abaixo:</p>
             <ol class="mb-3">
@@ -86,7 +86,7 @@
                 <li class="mb-2">Abra o navegador em:<br>
                     <code>http://localhost:8000</code></li>
             </ol>
-            <p class="mb-0 text-muted"><i class="fas fa-info-circle me-1"></i> O servidor irá automaticamente buscar os dados do Google Sheets.</p>
+            <p class="mb-0 text-muted"><i class="fas fa-info-circle me-1"></i> O servidor é necessário apenas em modo local — em deploy web (GitHub Pages, Netlify, etc.) os dados são carregados diretamente.</p>
         </div>
 
         <!-- Filters Section -->

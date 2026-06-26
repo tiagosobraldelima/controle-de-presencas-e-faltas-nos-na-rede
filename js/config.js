@@ -8,15 +8,44 @@
 const Config = {
     // API Configuration
     API: {
-        BASE_URL: '',
+        // Modo de operação:
+        //   'auto'    - detecta automaticamente (recomendado)
+        //   'static'  - GitHub Pages / hosting estático (fetch direto do Google Sheets)
+        //   'proxy'   - servidor Python local (server.py)
+        MODE: 'auto',
+
+        // URLs para modo estático
+        CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoGnE2RG9yDysuCwJubfxoJcbbdC8yfeguHrKOXwxyiIGAKxy71hvp8Uow4-3gucHLQlBOqp24NdaU/pub?gid=1700106572&single=true&output=csv',
+
+        // Proxies CORS públicos (fallback se fetch direto falhar por CORS)
+        CORS_PROXIES: [
+            // corsproxy.io - gratuito, sem limite agressivo
+            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            // allorigins.win - alternativo
+            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+        ],
+
+        // Endpoints para modo proxy (servidor local)
         ENDPOINTS: {
             DATA: '/api/data',
             PROXY: '/proxy/'
         },
+
         TIMEOUT: 30000,
         RETRY_ATTEMPTS: 3,
         RETRY_DELAY: 1000
     },
+
+    // Hosts de hosting estático (GitHub Pages, Netlify, Vercel, Cloudflare Pages)
+    // Quando detectado, o dashboard usa modo 'static' automaticamente.
+    STATIC_HOSTS: [
+        'github.io',
+        'netlify.app',
+        'vercel.app',
+        'pages.dev',
+        'cloudflarepages.com',
+        'surge.sh',
+    ],
 
     // Course Configuration
     COURSE: {
